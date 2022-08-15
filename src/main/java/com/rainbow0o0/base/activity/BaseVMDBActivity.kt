@@ -37,7 +37,7 @@ abstract class BaseVMDBActivity<VM : BaseVM, DB : ViewDataBinding> : AppCompatAc
         init(savedInstanceState)
     }
 
-    private fun init(savedInstanceState: Bundle?) {
+    open fun init(savedInstanceState: Bundle?) {
         mViewModel = createViewModel()
         registerUiChange()
         initView(savedInstanceState)
