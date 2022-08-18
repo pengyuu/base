@@ -5,9 +5,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.rainbow0o0.base.ext.getVmClazz
 import com.rainbow0o0.base.ext.inflateBindingWithGeneric
@@ -23,8 +21,8 @@ import com.rainbow0o0.base.vm.BaseVM
  */
 abstract class BaseVMDBActivity<VM : BaseVM, DB : ViewDataBinding> : AppCompatActivity() {
 
-    lateinit var mViewModel: VM
-    lateinit var mDatabind: DB
+    lateinit var vm: VM
+    lateinit var binding: DB
 
     abstract fun initView(savedInstanceState: Bundle?)
 
@@ -38,7 +36,7 @@ abstract class BaseVMDBActivity<VM : BaseVM, DB : ViewDataBinding> : AppCompatAc
     }
 
     open fun init(savedInstanceState: Bundle?) {
-        mViewModel = createViewModel()
+        vm = createViewModel()
         registerUiChange()
         initView(savedInstanceState)
         createObserver()
@@ -73,11 +71,11 @@ abstract class BaseVMDBActivity<VM : BaseVM, DB : ViewDataBinding> : AppCompatAc
      */
     private fun registerUiChange() {
         //显示弹窗
-        mViewModel.loadingChange.showDialog.observeSticky(this) {
+        vm.loadingChange.showDialog.observeSticky(this) {
             showLoading(it)
         }
         //关闭弹窗
-        mViewModel.loadingChange.dismissDialog.observeSticky(this) {
+        vm.loadingChange.dismissDialog.observeSticky(this) {
             "取消弹窗".logD()
             dismissLoading()
         }
@@ -104,7 +102,7 @@ abstract class BaseVMDBActivity<VM : BaseVM, DB : ViewDataBinding> : AppCompatAc
      * 供子类BaseVmDbActivity 初始化Databinding操作
      */
     open fun initDataBind(): View? {
-        mDatabind = inflateBindingWithGeneric(layoutInflater)
-        return mDatabind.root
+        binding = inflateBindingWithGeneric(layoutInflater)
+        return binding.root
     }
 }
