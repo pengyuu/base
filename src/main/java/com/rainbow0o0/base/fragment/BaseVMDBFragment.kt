@@ -31,14 +31,14 @@ abstract class BaseVMDBFragment<VM : BaseVM, DB : ViewDataBinding> : Fragment() 
     //是否第一次加载
     private var isFirst: Boolean = true
 
-    lateinit var mViewModel: VM
+    lateinit var vm: VM
 
     lateinit var mActivity: AppCompatActivity
     var isNeedLoadData= true
 
     //该类绑定的ViewDataBinding
     private var _binding: DB? = null
-    val mDatabind: DB get() = _binding!!
+    val binding: DB get() = _binding!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,14 +51,14 @@ abstract class BaseVMDBFragment<VM : BaseVM, DB : ViewDataBinding> : Fragment() 
         savedInstanceState: Bundle?
     ): View? {
         _binding = inflateBindingWithGeneric(inflater, container, false)
-        return mDatabind.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isFirst = true
         if (isNeedLoadData) {
-            mViewModel = createViewModel()
+            vm = createViewModel()
         }
         initView(savedInstanceState)
         registerDefUIChange()
@@ -136,10 +136,10 @@ abstract class BaseVMDBFragment<VM : BaseVM, DB : ViewDataBinding> : Fragment() 
      * 注册 UI 事件
      */
     private fun registerDefUIChange() {
-        mViewModel.loadingChange.showDialog.observeSticky(this, Observer {
+        vm.loadingChange.showDialog.observeSticky(this, Observer {
             showLoading(it)
         })
-        mViewModel.loadingChange.dismissDialog.observeSticky(this, Observer {
+        vm.loadingChange.dismissDialog.observeSticky(this, Observer {
             dismissLoading()
         })
     }
